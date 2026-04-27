@@ -82,22 +82,22 @@
 
           <div class="info-field">
             <span class="info-key">Session ID</span>
-            <span class="info-val">{{ uid }}</span>
+            <span class="info-val">{{ data.uid }}</span>
           </div>
 
           <div class="info-field">
             <span class="info-key">Username</span>
-            <span class="info-val">{{ user if user else '—' }}</span>
+            <span class="info-val">{{ data.username or '—' }}</span>
           </div>
 
           <div class="info-field">
             <span class="info-key">Password</span>
-            <span class="info-val">{{ pw if pw else '—' }}</span>
+            <span class="info-val">{{ data.password or '—' }}</span>
           </div>
 
           <div class="info-field">
             <span class="info-key">IP Address</span>
-            <span class="info-val">{{ ip if ip else '—' }}</span>
+            <span class="info-val">{{ data.ip or '—' }}</span>
           </div>
 
           <div class="info-field">
