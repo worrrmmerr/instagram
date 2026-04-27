@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login</title>
+
+  <style>
+    :root {
+      --bg: #030604;
+      --panel: rgba(9, 18, 12, .88);
+      --panel-2: #0b120d;
+      --border: rgba(0, 255, 136, .18);
+      --green: #00ff88;
+      --green-soft: rgba(0, 255, 136, .1);
+      --text: #d9ffe8;
+      --muted: #6f8f7a;
+      --danger: #ff4d6d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,255,136,.10), transparent 28%),
+        radial-gradient(circle at 80% 80%, rgba(0,255,136,.06), transparent 30%),
+        linear-gradient(180deg, #050806, #020403);
+      color: var(--text);
+      font-family: Consolas, "Courier New", monospace;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,.025) 1px, transparent 1px);
+      background-size: 38px 38px;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        rgba(255,255,255,.025) 50%,
+        rgba(0,0,0,.025) 50%
+      );
+      background-size: 100% 4px;
+      opacity: .25;
+      pointer-events: none;
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 410px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow:
+        0 0 45px rgba(0,255,136,.08),
+        0 25px 80px rgba(0,0,0,.45);
+      backdrop-filter: blur(16px);
+    }
+
+    .top {
+      margin-bottom: 26px;
+    }
+
+    .tag {
+      display: inline-block;
+      color: var(--green);
+      background: var(--green-soft);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--text);
+      font-size: 28px;
+      letter-spacing: -1px;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .error {
+      color: var(--danger);
+      background: rgba(255, 77, 109, .08);
+      border: 1px solid rgba(255, 77, 109, .25);
+      padding: 11px 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-size: 13px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 15px;
+      background: #050806;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      font-family: inherit;
+      outline: none;
+      font-size: 15px;
+      transition: .2s;
+    }
+
+    input::placeholder {
+      color: #3f5a49;
+    }
+
+    input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 4px rgba(0,255,136,.08);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 4px;
+      padding: 14px;
+      background: var(--green);
+      border: 0;
+      border-radius: 12px;
+      color: #031007;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 15px;
+      transition: .2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 25px rgba(0,255,136,.25);
+    }
+
+    .footer {
+      margin-top: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 16px;
+        overflow: auto;
+      }
+
+      .box {
+        padding: 24px 20px;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .sub {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="login-wrap">
+    <form class="box" method="POST">
+      <div class="top">
+        <span class="tag">restricted endpoint</span>
+        <h1>Admin Access</h1>
+        <p class="sub">Enter the control password to continue.</p>
+      </div>
+
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          placeholder="••••••••••••"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button type="submit">Unlock Panel</button>
+
+      <div class="footer">
+        root@control-center: authentication required
+      </div>
+    </form>
+  </main>
+</body>
+</html>

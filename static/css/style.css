@@ -1,0 +1,269 @@
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #1c2b33;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* FLASH MESSAGES */
+.flash-messages {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 90%;
+  max-width: 360px;
+}
+.flash {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  animation: fadeIn 0.25s ease;
+}
+.flash.error   { background: #3a1a1a; border: 1px solid #c0392b; color: #ff6b6b; }
+.flash.success { background: #0d2a1a; border: 1px solid #27ae60; color: #2ecc71; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* PAGE WRAPPER */
+.page {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 28px 40px;
+}
+
+/* LANGUAGE BAR */
+.lang-bar {
+  width: 100%;
+  text-align: center;
+  padding: 16px 0 0;
+  padding-bottom: 50px;
+  font-size: 14px;
+  color: #cbd2d9
+;
+}
+.ig_logo{
+  width: 60px;
+  height: 60px;
+  
+}
+
+/* LOGO */
+.logo-wrap { margin: 44px 0 52px; 
+padding-bottom: 50px;
+}
+.ig-logo { width: 80px; height: 80px; display: block; }
+
+/* FORM */
+.form-area { width: 100%; display: flex; flex-direction: column; }
+
+.input-field {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgb(70, 90, 105);
+  border-radius: 14px;
+  padding: 18px 20px;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 10px;
+}
+.input-field::placeholder { color: #8595a4; }
+.input-field:focus {
+  border-color: #8595a4;
+  box-shadow: 0 0 0 3px rgba(74,111,165,0.15);
+}
+
+.btn-login {
+  display: flex;          
+  align-items: center;     
+  justify-content: center; 
+  
+  width: 100%;
+  background: #0064e0;
+  border: none;
+  border-radius: 22px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  
+  /* Use min-height instead of fixed height for better text alignment */
+  min-height: 44px; 
+  padding: 0 20px;         /* Horizontal padding only if using flex centering */
+  
+  transition: background 0.2s, transform 0.1s;
+}
+
+.login_text {
+  display: flex;
+  align-items: center;
+}
+
+.meta_logo{
+  width: 60px;
+  height: 12px;
+}
+
+.btn-login:hover  { background: #0086e0; }
+.btn-login:active { transform: scale(0.98); }
+
+.forgot-pw {
+      text-align: center;
+    margin: 22px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+.forgot-pw:hover { text-decoration: underline; }
+
+/* BOTTOM SECTION */
+.bottom-section {
+  width: 100%;
+  margin-top: auto;
+  padding-top: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.btn-create {
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid #3a6fa5;
+  border-radius: 14px;
+  padding: 16px;
+  color: #4a9af5;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+.btn-create:hover { background: rgba(74,154,245,0.06); }
+
+.meta-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #9a9fb8;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+
+
+
+
+
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Ensure the button stays the same size when spinning */
+.btn-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 44px;
+}
+
+
+
+
+
+
+
+.sms-container {
+    background: #121212; /* Dark mode per image */
+    color: white;
+    padding: 20px;
+    height: 100vh;
+}
+
+.sms-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-arrow {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.account-name { font-size: 14px; font-weight: 500; }
+
+.sms-title { font-size: 24px; margin: 10px 0; }
+
+.sms-desc { color: #b0b0b0; font-size: 14px; line-height: 1.4; }
+
+.sms-image-wrap img {
+    width: 100%;
+    border-radius: 18px;
+    margin: 20px 0;
+}
+
+.timer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #b0b0b0;
+    font-size: 13px;
+    margin: 15px 0;
+}
+
+.trust-device {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.btn-another {
+    background: transparent;
+    border: none;
+    color: #b0b0b0;
+    width: 100%;
+    padding: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}

